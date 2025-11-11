@@ -12,21 +12,23 @@ export default [
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     plugins: {
-      'react-refresh': pluginReactRefresh,
       react: pluginReact,
       'react-hooks': pluginReactHooks,
+      'react-refresh': pluginReactRefresh,
     },
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node,
       },
-      parser: tseslint.parser,
       parserOptions: {
         ecmaFeatures: { jsx: true },
       },
+      parser: tseslint.parser,
     },
     rules: {
+      ...pluginReact.configs.recommended.rules,
+      ...pluginReactHooks.configs['recommended-latest'].rules,
       'react-refresh/only-export-components': 'warn',
     },
   },
