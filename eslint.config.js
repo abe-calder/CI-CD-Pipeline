@@ -1,41 +1,35 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
-import React from 'react'
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import pluginReact from 'eslint-plugin-react';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
+import pluginReactRefresh from 'eslint-plugin-react-refresh';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
-export default defineConfig([
-  globalIgnores(['dist', '.eslintrc.cjs', 'vite.config.ts']),
+export default [
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-      prettier,
-      React.configs['recommended']
-    ],
+    ignores: ['dist', 'node_modules'],
+  },
+  {
+    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
+    plugins: {
+      'react-refresh': pluginReactRefresh,
+      react: pluginReact,
+      'react-hooks': pluginReactHooks,
+    },
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
-    parser: "@typescript-eslint/parser",
-    plugins: ['react-refresh', 'react', '@typescript-eslint', 'prettier'],
-    rules: {
-      "react/react-in-jsx-scope": "off",
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
-      "prettier/prettier": "error"
-    },
-    settings: {
-      react: {
-        version: 'detect',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
       },
     },
+    rules: {
+      'react-refresh/only-export-components': 'warn',
+    },
   },
-])
+  ...tseslint.configs.recommended,
+  eslintConfigPrettier,
+];
